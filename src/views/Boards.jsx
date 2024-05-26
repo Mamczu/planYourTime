@@ -19,6 +19,10 @@ function Boards() {
     setBoards((prevBoards) => [...prevBoards, newBoard]);
   };
 
+  const deleteBoard = (id) => {
+    setBoards(boards.filter((board) => board.id !== id));
+  };
+
   return (
     <div className="flex flex-col gap-4 w-full p-8 bg-neutral-200">
       <header className="flex justify-between items-center">
@@ -32,13 +36,27 @@ function Boards() {
       </header>
       <main className="flex flex-wrap">
         {boards.map((board) => (
-          <Link
+          <div
             key={board.id}
-            to={`/board/${board.id}`}
-            className="border p-4 m-2 flex-grow text-white bg-light-blue rounded-md hover:bg-gray-300 hover:text-black w-1/4"
+            className="relative border p-4 m-2 flex-grow text-white bg-light-blue rounded-md hover:bg-gray-300 hover:text-black w-1/4"
           >
-            <h2>{board.name}</h2>
-          </Link>
+            <Link
+              to={`/board/${board.id}`}
+              className="block relative z-10 flex justify-between items-center"
+            >
+              <h2>{board.name}</h2>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  e.preventDefault();
+                  deleteBoard(board.id);
+                }}
+                className="bg-dark-red text-white font-bold py-1 px-2 rounded-md z-20"
+              >
+                X
+              </button>
+            </Link>
+          </div>
         ))}
       </main>
     </div>

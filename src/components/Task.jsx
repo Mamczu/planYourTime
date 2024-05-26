@@ -1,6 +1,5 @@
-import React from 'react';
-
-function Task({ title, date, description, label, labelColor }) {
+// eslint-disable-next-line react/prop-types
+function Task({ title, date, description, label, labelColor, onDelete }) {
   return (
     <div className="p-4 mb-4 border rounded-md bg-white shadow">
       <h2 className="text-lg font-bold">{title}</h2>
@@ -12,7 +11,10 @@ function Task({ title, date, description, label, labelColor }) {
         {label}
       </span>
       <div className="flex justify-end">
-        <button className="flex py-2 px-3 mt-4 border-none cursor-pointer rounded-md items-center text-white bg-dark-red">
+        <button
+          onClick={onDelete}
+          className="flex py-2 px-3 mt-4 border-none cursor-pointer rounded-md items-center text-white bg-dark-red"
+        >
           <span>Usuń</span>
         </button>
       </div>
