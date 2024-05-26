@@ -42,7 +42,7 @@ function Boards() {
           >
             <Link
               to={`/board/${board.id}`}
-              className="block relative z-10 flex justify-between items-center"
+              className="flex relative z-10 justify-between items-center"
             >
               <h2>{board.name}</h2>
               <button
