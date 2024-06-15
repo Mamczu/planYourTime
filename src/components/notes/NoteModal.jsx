@@ -48,14 +48,14 @@ const NoteModal = ({ note, isOpen, onClose, onSave, onDelete }) => {
             value={editedTitle}
             onChange={(e) => setEditedTitle(e.target.value)}
             className="w-full p-2 mb-4 border rounded"
-            placeholder="Title"
+            placeholder="Tytuł"
           />
           <textarea
             value={editedContent}
             onChange={(e) => setEditedContent(e.target.value)}
             className="w-full p-2 border rounded"
             rows="10"
-            placeholder="Content"
+            placeholder="Opis"
           />
         </main>
         <footer className="flex justify-end mt-4 gap-2">
