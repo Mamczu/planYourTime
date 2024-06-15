@@ -8,31 +8,31 @@ const TaskManager = ({ onLogout }) => {
     {
       name: 'Zadanie 1',
       date: '01.01.2030',
-      maxUsers: 1,
+      description: 1,
       type: 'Priorytetowe',
     },
     {
       name: 'Zadnie 2',
       date: '01.01.2030',
-      maxUsers: 5,
+      description: 5,
       type: 'Priorytetowe',
     },
     {
       name: 'Zadanie 3',
       date: '01.01.2026',
-      maxUsers: 10,
+      description: 10,
       type: 'Poboczne',
     },
     {
       name: 'Zadanie 4',
       date: '01.01.2026',
-      maxUsers: 10,
+      description: 10,
       type: 'Poboczne',
     },
     {
       name: 'Zadanie 5',
       date: '01.01.2026',
-      maxUsers: 10,
+      description: 10,
       type: 'Poboczne',
     },
   ]);
@@ -128,11 +128,11 @@ const TaskManager = ({ onLogout }) => {
 const NewTaskModal = ({ onClose, onSave }) => {
   const [name, setName] = useState('');
   const [date, setDate] = useState('');
-  const [maxUsers, setMaxUsers] = useState('');
+  const [description, setDescription] = useState('');
   const [type, setType] = useState('');
 
   const handleSubmit = () => {
-    onSave({ name, date, maxUsers, type });
+    onSave({ name, date, description, type });
   };
 
   return (
@@ -154,10 +154,10 @@ const NewTaskModal = ({ onClose, onSave }) => {
           className="border p-2 mb-4 w-full"
         />
         <input
-          type="number"
-          placeholder="Maksymalna liczba użytkowników"
-          value={maxUsers}
-          onChange={(e) => setMaxUsers(e.target.value)}
+          type="text"
+          placeholder="Opis"
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
           className="border p-2 mb-4 w-full"
         />
         <select

@@ -17,7 +17,7 @@ const Task = ({ task }) => {
     >
       <h3 className="text-lg font-bold">{task.name}</h3>
       <p>Data ważności: {task.date}</p>
-      <p>Maksymalna liczba użytkowników: {task.maxUsers}</p>
+      <p>Opis: {task.description}</p>
       <p>Typ zadania: {task.type}</p>
       <div className="flex space-x-2">
         <button className="bg-gray-200 px-4 py-2 rounded">Pokaż</button>
@@ -31,7 +31,7 @@ Task.propTypes = {
   task: PropTypes.shape({
     name: PropTypes.string.isRequired,
     date: PropTypes.string.isRequired,
-    maxUsers: PropTypes.number.isRequired,
+    description: PropTypes.number.isRequired,
     type: PropTypes.string.isRequired,
   }).isRequired,
 };
