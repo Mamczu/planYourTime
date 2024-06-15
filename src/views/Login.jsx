@@ -1,79 +1,113 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 
-function Login() {
+const Login = ({ onLogin }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [isFormValid, setIsFormValid] = useState(true);
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!email || !password) {
-      setError('Please fill in all fields');
-    } else {
-      //TODO LOGOWANIE
-      console.log('Logged in');
+    setIsFormValid(true);
+
+    if (email !== 'admin@admin.com' || password !== 'Haslo123!') {
+      setIsFormValid(false);
+      return;
     }
+
+    onLogin();
+    navigate('/allTasks');
   };
 
   return (
-    <div className="min-h-screen flex justify-center bg-gray-50 p-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-semibold text-gray-900">
-            Zaloguj się do konta
-          </h2>
+    <div className="flex flex-col items-center justify-center bg-navy-blue min-h-screen w-full">
+      <header className="flex flex-col items-center justify-center mb-4">
+        <div className="w-16 h-16">
+          <img src="src\assets\img\timer.svg" alt="Logo" />
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <input type="hidden" name="remember" value="true" />
-          <div className="rounded-md shadow-sm -space-y-px">
+        <div>
+          <span className=" text-white text-2xl">Plan your time</span>
+        </div>
+      </header>
+
+      <main className="flex flex-col w-full px-10 py-8 gap-2 bg-white rounded-2xl shadow-md max-w-md">
+        <div className="flex items-center justify-center">
+          <span className=" text-black text-2xl font-semibold">Logowanie</span>
+        </div>
+
+        {!isFormValid && (
+          <div className="p-2 bg-red-600 text-white text-center rounded-md">
+            <span>Nieprawidłowy email lub hasło</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
             <div>
-              <label htmlFor="email-address" className="sr-only">
-                Adres email
+              <label className="text-gray-600" htmlFor="email">
+                Email
               </label>
-              <input
-                id="email-address"
-                name="email"
-                type="email"
-                autoComplete="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
             </div>
             <div>
-              <label htmlFor="password" className="sr-only">
-                Hasło
-              </label>
               <input
-                id="password"
-                name="password"
-                type="password"
-                autoComplete="current-password"
+                id="email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className={`border p-2 rounded-md w-full ${
+                  isFormValid ? 'border-gray-300' : 'border-red-500'
+                }`}
+                placeholder="Wprowadź adres email"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
               />
             </div>
           </div>
 
-          {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
+          <div className="flex flex-col gap-1 mb-4">
+            <div>
+              <label className="text-gray-600" htmlFor="password">
+                Hasło
+              </label>
+            </div>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className={`border p-2 rounded-md w-full ${
+                isFormValid ? 'border-gray-300' : 'border-red-500'
+              }`}
+              placeholder="Wprowadź hasło"
+              required
+            />
+          </div>
 
-          <div>
+          <div className="submit mb-4">
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-light-blue hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="btn-rounded text-white bg-light-blue p-2 rounded-md w-full"
             >
               Zaloguj
             </button>
           </div>
         </form>
-      </div>
+
+        <footer className="flex flex-col gap-4 text-gray-600 text-sm">
+          <div className="flex justify-center gap-1">
+            <span>Zapomniałeś hasła?</span>
+            <a href="/reset-password" className="text-light-blue">
+              Resetuj hasło
+            </a>
+          </div>
+        </footer>
+      </main>
     </div>
   );
-}
+};
 
+Login.propTypes = {
+  onLogin: PropTypes.func.isRequired,
+};
 export default Login;

@@ -1,95 +1,81 @@
 import { useState } from 'react';
 
-function ResetPassword() {
+const ResetPassword = () => {
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [error, setError] = useState('');
+  const [isFormValid, setIsFormValid] = useState(true);
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!email || !password || !confirmPassword) {
-      setError('Please fill in all fields');
-    } else if (password !== confirmPassword) {
-      setError('Passwords do not match');
-    } else {
-      // TODO: Resetowanie hasła
-      console.log('Password reset');
-    }
+    setIsFormValid(false);
   };
 
   return (
-    <div className="min-h-screen flex justify-center bg-gray-50 p-8">
-      <div className="max-w-md w-full space-y-8">
-        <div>
-          <h2 className="mt-6 text-3xl font-semibold text-gray-900">
-            Resetuj hasło
-          </h2>
+    <div className="flex flex-col items-center justify-center bg-navy-blue min-h-screen w-full">
+      <header className="flex flex-col items-center justify-center mb-4">
+        <div className="w-16 h-16">
+          <img src="src\assets\img\timer.svg" alt="Logo" />
         </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm -space-y-px">
+        <div>
+          <span className=" text-white text-2xl">Plan your time</span>
+        </div>
+      </header>
+
+      <main className="flex flex-col w-full px-10 py-8 gap-2 bg-white rounded-2xl shadow-md max-w-md">
+        <div className="flex items-center justify-center">
+          <span className=" text-black text-2xl font-semibold">
+            Resetowanie hasła
+          </span>
+        </div>
+
+        {!isFormValid && (
+          <div className="p-2 bg-red-600 text-white text-center rounded-md">
+            <span>Nieprawidłowy email lub hasło</span>
+          </div>
+        )}
+
+        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+          <div className="flex flex-col gap-1">
             <div>
-              <label htmlFor="email-address" className="sr-only">
-                Adres email
+              <label className="text-gray-600" htmlFor="email">
+                Email
               </label>
+            </div>
+            <div>
               <input
-                id="email-address"
-                name="email"
+                id="email"
                 type="email"
-                autoComplete="email"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="sr-only">
-                Nowe hasło
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
+                className={`border p-2 rounded-md w-full ${
+                  isFormValid ? 'border-gray-300' : 'border-red-500'
+                }`}
+                placeholder="Wprowadź adres email"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="New password"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-            <div>
-              <label htmlFor="confirm-password" className="sr-only">
-                Powtórz hasło
-              </label>
-              <input
-                id="confirm-password"
-                name="confirm-password"
-                type="password"
-                required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Confirm password"
-                value={confirmPassword}
-                onChange={(e) => setConfirmPassword(e.target.value)}
               />
             </div>
           </div>
 
-          {error && <p className="text-red-500 text-xs mt-1">{error}</p>}
-
-          <div>
+          <div className="submit mb-4">
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-light-blue hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="btn-rounded text-white bg-light-blue p-2 rounded-md w-full"
             >
               Resetuj hasło
             </button>
           </div>
         </form>
-      </div>
+
+        <footer className="flex flex-col gap-4 text-gray-600 text-sm">
+          <div className="flex justify-center gap-1">
+            <span>Pamiętasz hasło?</span>
+            <a href="/login" className="text-light-blue">
+              Zaloguj się
+            </a>
+          </div>
+        </footer>
+      </main>
     </div>
   );
-}
+};
 
 export default ResetPassword;
