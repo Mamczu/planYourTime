@@ -1,25 +1,39 @@
-// eslint-disable-next-line react/prop-types
-function Task({ title, date, description, label, labelColor, onDelete }) {
+import { useState } from 'react';
+import PropTypes from 'prop-types';
+
+const Task = ({ task }) => {
+  const [isHighlighted, setIsHighlighted] = useState(false);
+
+  const handleTaskClick = () => {
+    setIsHighlighted(!isHighlighted);
+  };
+
   return (
-    <div className="p-4 mb-4 border rounded-md bg-white shadow">
-      <h2 className="text-lg font-bold">{title}</h2>
-      <p className="text-sm text-gray-500">{date}</p>
-      <p className="mt-2">{description}</p>
-      <span
-        className={`inline-block mt-2 py-1 px-2 rounded bg-red-500 text-white text-xs uppercase font-bold ${labelColor}`}
-      >
-        {label}
-      </span>
-      <div className="flex justify-end">
-        <button
-          onClick={onDelete}
-          className="flex py-2 px-3 mt-4 border-none cursor-pointer rounded-md items-center text-white bg-dark-red"
-        >
-          <span>Usuń</span>
-        </button>
+    <div
+      className={`border p-4 mb-4 rounded cursor-pointer ${
+        isHighlighted ? 'bg-light-blue' : ''
+      }`}
+      onClick={handleTaskClick}
+    >
+      <h3 className="text-lg font-bold">{task.name}</h3>
+      <p>Data ważności: {task.date}</p>
+      <p>Maksymalna liczba użytkowników: {task.maxUsers}</p>
+      <p>Typ zadania: {task.type}</p>
+      <div className="flex space-x-2">
+        <button className="bg-gray-200 px-4 py-2 rounded">Pokaż</button>
+        <button className="bg-gray-200 px-4 py-2 rounded">Edycja</button>
       </div>
     </div>
   );
-}
+};
+
+Task.propTypes = {
+  task: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired,
+    maxUsers: PropTypes.number.isRequired,
+    type: PropTypes.string.isRequired,
+  }).isRequired,
+};
 
 export default Task;

@@ -58,7 +58,7 @@ const Boards = ({ onLogout }) => {
       <aside>
         <Navbar onLogout={onLogout}></Navbar>
       </aside>
-      <div className="flex flex-col gap-4 w-full p-8 bg-neutral-200">
+      <div className="flex flex-col gap-4 w-full p-8">
         <header className="flex justify-between items-center">
           <h1 className="text-2xl font-bold">Tablice</h1>
           <button
