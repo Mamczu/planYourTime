@@ -94,7 +94,7 @@ const Login = ({ onLogin }) => {
           </div>
         </form>
 
-        <footer className="flex flex-col gap-4 text-gray-600 text-sm">
+        <footer className="flex flex-col gap-4 text-gray-600 text-sm mb-4">
           <div className="flex justify-center gap-1">
             <span>Zapomniałeś hasła?</span>
             <a href="/reset-password" className="text-light-blue">

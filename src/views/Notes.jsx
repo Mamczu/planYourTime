@@ -1,8 +1,10 @@
 import { useState } from 'react';
 import Note from '@/components/notes/Note';
 import NoteModal from '@/components/notes/NoteModal';
+import Navbar from '@/components/layout/Navbar';
+import PropTypes from 'prop-types';
 
-const Notes = () => {
+const Notes = ({ onLogout }) => {
   const [notes, setNotes] = useState([
     {
       id: 1,
@@ -37,6 +39,24 @@ const Notes = () => {
   ]);
   const [selectedNote, setSelectedNote] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
+  const [messages, setMessages] = useState([]);
+
+  const addMessage = (content, type) => {
+    const message = { content, type };
+    setMessages((prevMessages) => [message, ...prevMessages]);
+
+    const timeoutId = setTimeout(() => {
+      removeMessage(message);
+    }, 4000);
+
+    message.timeoutId = timeoutId;
+  };
+
+  const removeMessage = (message) => {
+    setMessages((prevMessages) =>
+      prevMessages.filter((msg) => msg !== message)
+    );
+  };
 
   const handleNoteClick = (note) => {
     setSelectedNote(note);
@@ -50,8 +70,10 @@ const Notes = () => {
   const handleSaveNote = (note) => {
     if (selectedNote) {
       setNotes(notes.map((n) => (n.id === note.id ? note : n)));
+      addMessage('Notatka została pomyślnie edytowana!', 'success');
     } else {
       setNotes([...notes, note]);
+      addMessage('Notatka została pomyślnie dodana!', 'success');
     }
   };
 
@@ -59,37 +81,77 @@ const Notes = () => {
     setIsAdding(true);
   };
 
+  const handleDeleteNote = (id) => {
+    setNotes(notes.filter((note) => note.id !== id));
+    addMessage('Notatka została pomyślnie usunięta!', 'success');
+  };
+
   return (
-    <div className="p-8">
-      <header className="flex justify-between items-center mb-4">
-        <h1 className="text-2xl font-bold">Notatki</h1>
-        <button
-          onClick={handleAddNote}
-          className="bg-blue-500 text-white px-4 py-2 rounded"
-        >
-          Dodaj notatkę
-        </button>
-      </header>
-      <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {notes.map((note) => (
-          <Note
-            key={note.id}
-            title={note.title}
-            content={note.content}
-            onClick={() => handleNoteClick(note)}
+    <div className="flex">
+      <aside>
+        <Navbar onLogout={onLogout}></Navbar>
+      </aside>
+      <div className="w-full p-8">
+        <header className="flex justify-between items-center mb-4">
+          <h1 className="text-2xl font-bold">Notatki</h1>
+          <button
+            onClick={handleAddNote}
+            className="bg-blue-500 text-white px-4 py-2 rounded"
+          >
+            Dodaj notatkę
+          </button>
+        </header>
+        <main className="grid auto-rows-auto grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 ">
+          {notes.map((note) => (
+            <Note
+              key={note.id}
+              title={note.title}
+              content={note.content}
+              onClick={() => handleNoteClick(note)}
+            />
+          ))}
+        </main>
+        {(selectedNote || isAdding) && (
+          <NoteModal
+            note={selectedNote}
+            isOpen={!!selectedNote || isAdding}
+            onClose={handleCloseModal}
+            onSave={handleSaveNote}
+            onDelete={handleDeleteNote}
           />
+        )}
+      </div>
+      <div>
+        {messages.map((message, index) => (
+          <div
+            key={index}
+            className={`fixed flex flex-row items-center justify-between right-8 bottom-1/3 p-4 gap-4 rounded-md shadow-xl z-50 ${
+              message.type === 'success' ? 'bg-teal-50' : 'bg-red-50'
+            }`}
+            style={{ bottom: `${(index + 1) * 5}rem` }}
+            onClick={() => removeMessage(message)}
+          >
+            <div className="flex flex-row items-center gap-5">
+              <div>
+                <span
+                  className={`${
+                    message.type === 'success'
+                      ? 'text-teal-800 font-semibold'
+                      : 'text-red-800 font-semibold'
+                  }`}
+                >
+                  {message.content}
+                </span>
+              </div>
+            </div>
+          </div>
         ))}
-      </main>
-      {(selectedNote || isAdding) && (
-        <NoteModal
-          note={selectedNote}
-          isOpen={!!selectedNote || isAdding}
-          onClose={handleCloseModal}
-          onSave={handleSaveNote}
-        />
-      )}
+      </div>
     </div>
   );
 };
 
+Notes.propTypes = {
+  onLogout: PropTypes.func.isRequired,
+};
 export default Notes;

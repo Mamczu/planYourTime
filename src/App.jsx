@@ -6,9 +6,7 @@ import {
   Navigate,
 } from 'react-router-dom';
 
-import TaskManager from '@/views/Tasks/TaskManager';
-import ArchivedTasks from '@/views/Tasks/ArchivedTasks';
-
+import TaskManager from '@/views/TaskManager';
 import Notes from '@/views/Notes';
 import Boards from '@/views/Boards';
 import Board from '@/components/Board';
@@ -45,16 +43,6 @@ function App() {
           element={
             isAuthenticated ? (
               <TaskManager onLogout={handleLogout} />
-            ) : (
-              <Navigate to="/login" />
-            )
-          }
-        />
-        <Route
-          path="/archivedTasks"
-          element={
-            isAuthenticated ? (
-              <ArchivedTasks onLogout={handleLogout} />
             ) : (
               <Navigate to="/login" />
             )

@@ -17,9 +17,7 @@ const Navbar = ({ onLogout }) => {
             <li className="hover:bg-gray-200 hover:text-black p-2 rounded-md">
               <Link to="/tasks">Menadżer zadań</Link>
             </li>
-            <li className="hover:bg-gray-200 hover:text-black p-2 rounded-md">
-              <Link to="/archivedTasks">Archiwum zadań</Link>
-            </li>
+
             <li className="hover:bg-gray-200 hover:text-black p-2 rounded-md">
               <Link to="/notes">Notatki</Link>
             </li>

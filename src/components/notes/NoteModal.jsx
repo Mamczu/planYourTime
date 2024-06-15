@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import { useState, useEffect } from 'react';
 
-const NoteModal = ({ note, isOpen, onClose, onSave }) => {
+const NoteModal = ({ note, isOpen, onClose, onSave, onDelete }) => {
   const [editedTitle, setEditedTitle] = useState(note ? note.title : '');
   const [editedContent, setEditedContent] = useState(note ? note.content : '');
 
@@ -21,6 +21,13 @@ const NoteModal = ({ note, isOpen, onClose, onSave }) => {
       ? { ...note, title: editedTitle, content: editedContent }
       : { id: Date.now(), title: editedTitle, content: editedContent };
     onSave(newNote);
+    onClose();
+  };
+
+  const handleDelete = () => {
+    if (note) {
+      onDelete(note.id);
+    }
     onClose();
   };
 
@@ -51,13 +58,21 @@ const NoteModal = ({ note, isOpen, onClose, onSave }) => {
             placeholder="Content"
           />
         </main>
-        <footer className="flex justify-end mt-4">
+        <footer className="flex justify-end mt-4 gap-2">
           <button
             onClick={handleSave}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
+            className="bg-dark-green text-white px-4 py-2 rounded"
           >
             Zapisz notatkę
           </button>
+          {note && (
+            <button
+              onClick={handleDelete}
+              className="bg-dark-red text-white px-4 py-2 rounded"
+            >
+              Usuń notatkę
+            </button>
+          )}
         </footer>
       </div>
     </div>
@@ -69,6 +84,7 @@ NoteModal.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   onClose: PropTypes.func.isRequired,
   onSave: PropTypes.func.isRequired,
+  onDelete: PropTypes.func.isRequired,
 };
 
 export default NoteModal;
