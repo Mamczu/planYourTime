@@ -18,7 +18,7 @@ const Login = ({ onLogin }) => {
     }
 
     onLogin();
-    navigate('/allTasks');
+    navigate('/boards');
   };
 
   return (

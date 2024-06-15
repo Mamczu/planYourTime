@@ -1,119 +1,95 @@
-// Notes.jsx
 import { useState } from 'react';
-import Note from '@/components/Note';
-import Modal from 'react-modal';
+import Note from '@/components/notes/Note';
+import NoteModal from '@/components/notes/NoteModal';
 
-Modal.setAppElement('#root');
-
-function Notes() {
+const Notes = () => {
   const [notes, setNotes] = useState([
-    { title: 'Pierwsza notatka', description: 'Notuję' },
-    { title: 'Druga notatka', description: 'Dalej notuję' },
-    { title: 'Trzecia notatka', description: 'Znowu notuję' },
+    {
+      id: 1,
+      title: 'Trening',
+      content:
+        '1) Rozgrzewka\n2) Przysiady\n3) Pompki\n4) Wiosłowanie\n5) Martwy ciąg\n6) Brzuszki\n7) Bieg na bieżni\n8) Skakanka\n9) Podciąganie\n10) Rozciąganie',
+    },
+    {
+      id: 2,
+      title: 'Studia',
+      content:
+        '1) Nauka matematyki\n2) Przygotowanie do egzaminu z fizyki\n3) Pisanie pracy dyplomowej\n4) Udział w konferencji\n5) Przygotowanie prezentacji\n6) Przegląd literatury\n7) Konsultacje z promotorem\n8) Praca w laboratorium\n9) Nauka programowania\n10) Zaliczenie przedmiotu',
+    },
+    {
+      id: 3,
+      title: 'Naprawa samochodu',
+      content:
+        '1) Wymiana oleju\n2) Wymiana filtrów\n3) Sprawdzenie hamulców\n4) Wymiana świec zapłonowych\n5) Kontrola poziomu płynów\n6) Sprawdzenie akumulatora\n7) Wymiana opon\n8) Naprawa układu wydechowego\n9) Sprawdzenie zawieszenia\n10) Diagnostyka komputerowa',
+    },
+    {
+      id: 4,
+      title: 'Remont domu',
+      content:
+        '1) Malowanie ścian\n2) Wymiana podłóg\n3) Montaż nowych drzwi\n4) Instalacja oświetlenia\n5) Remont łazienki\n6) Kuchnia – wymiana mebli\n7) Naprawa dachu\n8) Izolacja termiczna\n9) Instalacja paneli słonecznych\n10) Prace ogrodowe',
+    },
+    {
+      id: 5,
+      title: 'Przepis na naleśniki',
+      content:
+        '1) 1 szklanka mąki\n2) 2 jajka\n3) 1 szklanka mleka\n4) 0,5 szklanki wody gazowanej\n5) 2 łyżki oleju\n6) Szczypta soli\n7) Szczypta cukru\n8) Rozgrzać patelnię\n9) Smażyć naleśniki\n10) Podawać z ulubionymi dodatkami',
+    },
   ]);
-  const [modalIsOpen, setModalIsOpen] = useState(false);
-  const [newNote, setNewNote] = useState({ title: '', description: '' });
+  const [selectedNote, setSelectedNote] = useState(null);
+  const [isAdding, setIsAdding] = useState(false);
 
-  const handleAddNote = () => {
-    setNotes([...notes, newNote]);
-    setModalIsOpen(false);
-  };
-
-  const handleDeleteNote = (index) => {
-    const newNotes = [...notes];
-    newNotes.splice(index, 1);
-    setNotes(newNotes);
-  };
-
-  const handleOpenModal = () => {
-    setModalIsOpen(true);
+  const handleNoteClick = (note) => {
+    setSelectedNote(note);
   };
 
   const handleCloseModal = () => {
-    setModalIsOpen(false);
+    setSelectedNote(null);
+    setIsAdding(false);
   };
 
-  const handleInputChange = (e) => {
-    setNewNote({ ...newNote, [e.target.name]: e.target.value });
+  const handleSaveNote = (note) => {
+    if (selectedNote) {
+      setNotes(notes.map((n) => (n.id === note.id ? note : n)));
+    } else {
+      setNotes([...notes, note]);
+    }
+  };
+
+  const handleAddNote = () => {
+    setIsAdding(true);
   };
 
   return (
-    <div className="flex flex-col gap-4 w-full p-8 bg-neutral-200">
-      <header className="flex justify-between items-center">
-        <h1 className="text-xl font-bold">Notatki</h1>
+    <div className="p-8">
+      <header className="flex justify-between items-center mb-4">
+        <h1 className="text-2xl font-bold">Notatki</h1>
         <button
-          onClick={handleOpenModal}
-          className="flex no-underline py-3 px-4 border-none cursor-pointer rounded-md items-center text-white bg-light-blue"
+          onClick={handleAddNote}
+          className="bg-blue-500 text-white px-4 py-2 rounded"
         >
-          <span>Dodaj notatkę</span>
+          Dodaj notatkę
         </button>
       </header>
-      <main>
-        {notes.map((note, index) => (
+      <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {notes.map((note) => (
           <Note
-            key={index}
-            {...note}
-            onDelete={() => handleDeleteNote(index)}
+            key={note.id}
+            title={note.title}
+            content={note.content}
+            onClick={() => handleNoteClick(note)}
           />
         ))}
       </main>
-      <Modal
-        isOpen={modalIsOpen}
-        onRequestClose={handleCloseModal}
-        contentLabel="Note Modal"
-        className="rounded-md border border-gray-400 p-6"
-        style={{
-          overlay: {
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-          },
-          content: {
-            width: '33%',
-            height: '33%',
-            position: 'relative',
-            margin: 'auto',
-            background: '#fff',
-          },
-        }}
-      >
-        <div className="flex flex-row justify-between">
-          <div>
-            <h2>Dodaj nową notatkę</h2>
-          </div>
-          <div>
-            <button onClick={handleCloseModal}>X</button>
-          </div>
-        </div>
-        <form onSubmit={handleAddNote} className="flex flex-col p-2 gap-2">
-          <div className="flex flex-col gap-2">
-            <input
-              className="w-full border border-gray-300 rounded-md p-2"
-              name="title"
-              value={newNote.title}
-              onChange={handleInputChange}
-              placeholder="Tytuł notatki"
-            />
-            <input
-              className="w-full border border-gray-300 rounded-md p-2"
-              name="description"
-              value={newNote.description}
-              onChange={handleInputChange}
-              placeholder="Opis notatki"
-            />
-          </div>
-          <div className="flex">
-            <button
-              className="flex no-underline py-3 px-4 border-none cursor-pointer rounded-md items-center text-white bg-light-blue"
-              type="submit"
-            >
-              Dodaj notatkę
-            </button>
-          </div>
-        </form>
-      </Modal>
+      {(selectedNote || isAdding) && (
+        <NoteModal
+          note={selectedNote}
+          isOpen={!!selectedNote || isAdding}
+          onClose={handleCloseModal}
+          onSave={handleSaveNote}
+        />
+      )}
     </div>
   );
-}
+};
 
 export default Notes;
