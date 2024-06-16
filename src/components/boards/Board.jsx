@@ -78,6 +78,44 @@ const Board = ({ onLogout }) => {
     }));
   };
 
+  const deleteList = (listId) => {
+    setData((prevData) => {
+      const newLists = { ...prevData.lists };
+      delete newLists[listId];
+
+      const newCards = { ...prevData.cards };
+      prevData.lists[listId].cards.forEach((cardId) => {
+        delete newCards[cardId];
+      });
+
+      return {
+        ...prevData,
+        lists: newLists,
+        cards: newCards,
+        listOrder: prevData.listOrder.filter((id) => id !== listId),
+      };
+    });
+  };
+
+  const deleteCard = (listId, cardId) => {
+    setData((prevData) => {
+      const newLists = { ...prevData.lists };
+      newLists[listId] = {
+        ...newLists[listId],
+        cards: newLists[listId].cards.filter((id) => id !== cardId),
+      };
+
+      const newCards = { ...prevData.cards };
+      delete newCards[cardId];
+
+      return {
+        ...prevData,
+        lists: newLists,
+        cards: newCards,
+      };
+    });
+  };
+
   const onDragEnd = (result) => {
     const { destination, source, draggableId, type } = result;
 
@@ -180,7 +218,15 @@ const Board = ({ onLogout }) => {
                       {...provided.droppableProps}
                       className={`flex flex-col w-80 bg-white m-2 rounded shadow h-auto min-w-0`}
                     >
-                      <h2 className="p-3 font-bold">{list.title}</h2>
+                      <div className="flex justify-between items-center p-3">
+                        <h2 className="font-bold">{list.title}</h2>
+                        <button
+                          onClick={() => deleteList(listId)}
+                          className="text-red-500 font-bold"
+                        >
+                          X
+                        </button>
+                      </div>
                       {list.cards.map((cardId, index) => {
                         const card = data.cards[cardId];
                         return (
@@ -194,9 +240,15 @@ const Board = ({ onLogout }) => {
                                 ref={provided.innerRef}
                                 {...provided.draggableProps}
                                 {...provided.dragHandleProps}
-                                className={`m-3 p-3 bg-white border border-gray-300  rounded-md shadow`}
+                                className={`m-3 p-3 bg-white border border-gray-300 rounded-md shadow flex justify-between items-center`}
                               >
                                 {card.content}
+                                <button
+                                  onClick={() => deleteCard(listId, cardId)}
+                                  className="text-red-500 font-bold ml-2"
+                                >
+                                  X
+                                </button>
                               </div>
                             )}
                           </Draggable>
