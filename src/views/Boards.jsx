@@ -60,7 +60,7 @@ const Boards = ({ onLogout }) => {
       </aside>
       <div className="flex flex-col gap-4 w-full p-8">
         <header className="flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Tablice</h1>
+          <span className="text-2xl font-bold">Tablice</span>
           <button
             onClick={addBoard}
             className="flex no-underline py-3 px-4 border-none cursor-pointer rounded-md items-center text-white bg-dark-green"

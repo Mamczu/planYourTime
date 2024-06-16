@@ -24,6 +24,9 @@ const Navbar = ({ onLogout }) => {
             <li className="hover:bg-gray-200 hover:text-black p-2 rounded-md">
               <Link to="/calendar">Kalendarz</Link>
             </li>
+            <li className="hover:bg-gray-200 hover:text-black p-2 rounded-md">
+              <Link to="/notifications">Powiadomienia</Link>
+            </li>
           </ul>
         </nav>
 

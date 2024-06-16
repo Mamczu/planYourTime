@@ -9,10 +9,11 @@ import {
 import TaskManager from '@/views/TaskManager';
 import Notes from '@/views/Notes';
 import Boards from '@/views/Boards';
-import Board from '@/components/Board';
+import Board from '@/components/boards/Board';
 import CalendarView from '@/views/CalendarView';
-import Login from '@/views/Login';
-import ResetPassword from '@/views/ResetPassword';
+import Login from '@/views/login/Login';
+import ResetPassword from '@/views/login/ResetPassword';
+import Notifications from './views/Notifications';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -73,6 +74,16 @@ function App() {
           element={
             isAuthenticated ? (
               <CalendarView onLogout={handleLogout} />
+            ) : (
+              <Navigate to="/login" />
+            )
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            isAuthenticated ? (
+              <Notifications onLogout={handleLogout} />
             ) : (
               <Navigate to="/login" />
             )
