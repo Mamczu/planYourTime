@@ -49,6 +49,7 @@ const CalendarView = ({ onLogout }) => {
         <Navbar onLogout={onLogout}></Navbar>
       </aside>
       <div className="flex flex-col items-center p-5 w-full">
+        <h1 className="text-2xl font-bold mb-4">Kalendarz</h1>
         <Calendar
           className="w-full m-0 border-none"
           onChange={onChange}

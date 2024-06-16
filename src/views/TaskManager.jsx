@@ -12,7 +12,7 @@ const TaskManager = ({ onLogout }) => {
       type: 'Priorytetowe',
     },
     {
-      name: 'Zadnie 2',
+      name: 'Zadanie 2',
       date: '01.01.2030',
       description: 5,
       type: 'Priorytetowe',
@@ -36,23 +36,32 @@ const TaskManager = ({ onLogout }) => {
       type: 'Poboczne',
     },
   ]);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedTasks, setSelectedTasks] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const tasksPerPage = 5;
+  const [currentType, setCurrentType] = useState('Wszystkie');
 
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
   };
 
-  const filteredTasks = tasks.filter((task) =>
-    task.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
-
-  const handleTaskTypeClick = () => {
-    // Implement filtering by type if needed
+  const handleTaskTypeClick = (type) => {
+    setCurrentType(type);
   };
+
+  const filteredTasks = tasks
+    .filter((task) => {
+      if (currentType === 'Wszystkie') return true;
+      return task.type === currentType;
+    })
+    .filter((task) =>
+      task.name.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
   const handleNewTask = (newTask) => {
     setTasks([...tasks, newTask]);
@@ -61,7 +70,7 @@ const TaskManager = ({ onLogout }) => {
 
   const handleEditTask = (updatedTask) => {
     setTasks(
-      tasks.map((task) => (task.name === updatedTask.name ? updatedTask : task))
+      tasks.map((task) => (task.name === taskToEdit.name ? updatedTask : task))
     );
     setEditModalOpen(false);
   };
@@ -84,75 +93,108 @@ const TaskManager = ({ onLogout }) => {
     setEditModalOpen(true);
   };
 
+  const indexOfLastTask = currentPage * tasksPerPage;
+  const indexOfFirstTask = indexOfLastTask - tasksPerPage;
+  const currentTasks = filteredTasks.slice(indexOfFirstTask, indexOfLastTask);
+
+  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+
   return (
     <div className="flex">
       <aside>
         <Navbar onLogout={onLogout}></Navbar>
       </aside>
-      <div className="p-4 w-full">
+      <div className="flex flex-col p-8 w-full gap-4">
         <div className="flex justify-between items-center mb-4">
-          <h1 className="text-2xl font-bold">Wszystkie zadania</h1>
-          <div className="flex space-x-2">
-            <input
-              type="text"
-              placeholder="Wprowadź adres e-mail"
-              value={searchTerm}
-              onChange={handleSearch}
-              className="border p-2"
-            />
-            <button className="bg-blue-500 text-white px-4 py-2 rounded">
-              Wyszukaj
+          <span className="text-2xl font-bold">Menadżer zadań</span>
+        </div>
+
+        <div className="flex flex-row justify-between items-center">
+          <div className="flex flex-row gap-4">
+            <div className="flex flex-row">
+              <input
+                type="text"
+                placeholder="Wprowadź adres e-mail"
+                value={searchTerm}
+                onChange={handleSearch}
+                className="border p-2"
+              />
+              <button className="bg-blue-500 text-white px-4 py-2 rounded">
+                Wyszukaj
+              </button>
+            </div>
+
+            <div className="flex">
+              <button
+                onClick={() => handleTaskTypeClick('Wszystkie')}
+                className={`px-4 py-2 rounded ${
+                  currentType === 'Wszystkie'
+                    ? 'bg-light-blue text-white'
+                    : 'bg-white text-black'
+                }`}
+              >
+                Wszystkie <span>{tasks.length}</span>
+              </button>
+              <button
+                onClick={() => handleTaskTypeClick('Priorytetowe')}
+                className={`px-4 py-2 rounded ${
+                  currentType === 'Priorytetowe'
+                    ? 'bg-light-blue text-white'
+                    : 'bg-white text-black'
+                }`}
+              >
+                Priorytetowe{' '}
+                <span>
+                  {tasks.filter((task) => task.type === 'Priorytetowe').length}
+                </span>
+              </button>
+              <button
+                onClick={() => handleTaskTypeClick('Poboczne')}
+                className={`px-4 py-2 rounded ${
+                  currentType === 'Poboczne'
+                    ? 'bg-light-blue text-white'
+                    : 'bg-white text-black'
+                }`}
+              >
+                Poboczne{' '}
+                <span>
+                  {tasks.filter((task) => task.type === 'Poboczne').length}
+                </span>
+              </button>
+              <button
+                onClick={() => handleTaskTypeClick('Gotowe')}
+                className={`px-4 py-2 rounded ${
+                  currentType === 'Gotowe'
+                    ? 'bg-light-blue text-white'
+                    : 'bg-white text-black'
+                }`}
+              >
+                Gotowe{' '}
+                <span>
+                  {tasks.filter((task) => task.type === 'Gotowe').length}
+                </span>
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-row items-center gap-2">
+            <button
+              onClick={() => setModalOpen(true)}
+              className="bg-green-500 text-white px-4 py-2 rounded"
+            >
+              + Utwórz nowe zadanie
+            </button>
+            <button
+              onClick={handleDeleteSelected}
+              className="bg-red-500 text-white px-4 py-2 rounded"
+              disabled={selectedTasks.length === 0}
+            >
+              Usuń zaznaczone
             </button>
           </div>
         </div>
-        <div className="flex space-x-2 mb-4">
-          <button
-            onClick={() => handleTaskTypeClick('Wszystkie')}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Wszystkie <span>{tasks.length}</span>
-          </button>
-          <button
-            onClick={() => handleTaskTypeClick('Priorytetowe')}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Priorytetowe{' '}
-            <span>
-              {tasks.filter((task) => task.type === 'Priorytetowe').length}
-            </span>
-          </button>
-          <button
-            onClick={() => handleTaskTypeClick('Poboczne')}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Poboczne{' '}
-            <span>
-              {tasks.filter((task) => task.type === 'Poboczne').length}
-            </span>
-          </button>
-          <button
-            onClick={() => handleTaskTypeClick('Gotowe')}
-            className="bg-blue-500 text-white px-4 py-2 rounded"
-          >
-            Gotowe{' '}
-            <span>{tasks.filter((task) => task.type === 'Gotowe').length}</span>
-          </button>
-          <button
-            onClick={() => setModalOpen(true)}
-            className="bg-green-500 text-white px-4 py-2 rounded"
-          >
-            + Utwórz nowe zadanie
-          </button>
-          <button
-            onClick={handleDeleteSelected}
-            className="bg-red-500 text-white px-4 py-2 rounded"
-            disabled={selectedTasks.length === 0}
-          >
-            Usuń zaznaczone
-          </button>
-        </div>
         <div>
-          {filteredTasks.map((task, index) => (
+          {currentTasks.map((task, index) => (
             <Task
               key={index}
               task={task}
@@ -161,6 +203,24 @@ const TaskManager = ({ onLogout }) => {
               onEdit={handleEditClick}
             />
           ))}
+        </div>
+        <div className="flex justify-center mt-4">
+          {Array.from(
+            { length: Math.ceil(filteredTasks.length / tasksPerPage) },
+            (_, index) => (
+              <button
+                key={index}
+                onClick={() => paginate(index + 1)}
+                className={`px-4 py-2 mx-1 rounded ${
+                  currentPage === index + 1
+                    ? 'bg-light-blue text-white'
+                    : 'bg-white text-black'
+                }`}
+              >
+                {index + 1}
+              </button>
+            )
+          )}
         </div>
         {modalOpen && (
           <NewTaskModal

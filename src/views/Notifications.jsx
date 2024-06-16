@@ -70,10 +70,10 @@ const Notifications = ({ onLogout }) => {
 
   return (
     <div className="flex h-screen">
-      <aside className="w-64 bg-gray-800 text-white">
+      <aside>
         <Navbar onLogout={onLogout} />
       </aside>
-      <div className="flex-1 p-6 bg-gray-100">
+      <div className="flex-1 p-8 ">
         <header className="flex justify-between items-center">
           <span className="text-2xl font-bold">Powiadomienia</span>
           <button
@@ -97,7 +97,7 @@ const Notifications = ({ onLogout }) => {
           {notifications.map((notification, index) => (
             <li
               key={index}
-              className="p-4 bg-white rounded shadow flex justify-between items-center cursor-pointer"
+              className="bg-gray-100 text-gray-800 p-4 rounded-md mb-4 w-full cursor-pointer border border-gray-300 shadow-lg"
               onClick={() => handleEditNotification(index)}
             >
               <div>
@@ -125,7 +125,7 @@ const Notifications = ({ onLogout }) => {
           <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
             <div className="bg-white p-6 rounded shadow-lg w-96">
               <h3 className="text-xl font-semibold mb-4">
-                {isEditing ? 'Edycja powiadomienia' : 'Dodaj powiadomienie'}
+                {isEditing ? 'Edit Notification' : 'Create Notification'}
               </h3>
               <label className="block mb-2">
                 Nazwa:
